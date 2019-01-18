@@ -23,6 +23,7 @@ public class ArtistController {
         return artistRepository.count();
     }
 
+
     @RequestMapping(value="")
     public List<Artist> getAll() {
         return artistRepository.findAll();
@@ -73,6 +74,7 @@ public class ArtistController {
             artistRepository.delete(id);
         }
     }
+
 
 
 

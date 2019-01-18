@@ -23,6 +23,13 @@ public class AlbumController {
     public Album getById(@PathVariable("id") Long id) {
         return albumRepository.findOne(id);
     }
+    @RequestMapping(value="/{id}",method = RequestMethod.DELETE, consumes = "application/JSON")
+    public void delete(@PathVariable("id") Long id,@RequestBody Album album) {
+        if (album.getId()==id) {
+            albumRepository.delete(id);
+        }
+    }
+
     @RequestMapping(value = "",method = RequestMethod.POST, consumes = "application/JSON")
     public Album add(@RequestBody Album album) {
         album.setArtistId(album.getArtist().getId());

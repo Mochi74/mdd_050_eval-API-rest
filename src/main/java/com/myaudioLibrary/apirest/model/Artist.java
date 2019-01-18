@@ -12,7 +12,6 @@ public class Artist {
     @Column(name="name")
     private String name;
 
-    //@Transient
     @OneToMany
     @JoinColumn(name = "artistID")
     private List<Album> albums;
@@ -32,6 +31,7 @@ public class Artist {
     public void setName(String name) {
         this.name = name;
     }
+
 
     public List<Album> getAlbums() {
         return albums;
