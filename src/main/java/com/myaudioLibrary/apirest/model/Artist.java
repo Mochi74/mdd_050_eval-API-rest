@@ -12,8 +12,7 @@ public class Artist {
     @Column(name="name")
     private String name;
 
-    @OneToMany
-    @JoinColumn(name = "artistID")
+    @OneToMany(mappedBy = "artist")
     private List<Album> albums;
 
     public Long getId() {

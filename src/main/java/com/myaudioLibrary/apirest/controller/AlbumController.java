@@ -32,7 +32,7 @@ public class AlbumController {
 
     @RequestMapping(value = "",method = RequestMethod.POST, consumes = "application/JSON")
     public Album add(@RequestBody Album album) {
-        album.setArtistId(album.getArtist().getId());
+        //album.setArtistId(album.getArtist().getId());
         return albumRepository.save(album);
     }
 
