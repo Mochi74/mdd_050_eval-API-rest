@@ -30,7 +30,14 @@ public class ArtistController {
     }
     @RequestMapping(value="/{id}")
     public Artist getById(@PathVariable("id") Long id) {
-        return artistRepository.findOne(id);
+        Artist result = artistRepository.findOne(id);
+        if(result==null) {/*id not found return 404 error */
+   //         throw new ResponseStatusException(
+   //                 HttpStatus.NOT_FOUND, "Artist Not Found");
+        }
+        return result;
+
+
     }
 
     @RequestMapping(value="", params = "name")
