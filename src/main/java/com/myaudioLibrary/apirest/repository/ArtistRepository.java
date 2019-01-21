@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface ArtistRepository extends JpaRepository<Artist, Long> {
 
     Artist findByNameIgnoreCase(String name);
-    Page<Artist> findByNameStartingWithIgnoreCase(String name, Pageable pr);
+    Page<Artist> findByNameIsContaining(String name, Pageable pr);
 };

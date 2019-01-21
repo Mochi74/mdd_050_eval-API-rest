@@ -55,20 +55,20 @@ public class ArtistController {
                                      @RequestParam("sortProperty") String paramSort,
                                      @RequestParam("sortDirection") Sort.Direction direction) {
         Pageable pageRequest = new PageRequest(page, size, direction, paramSort);
-        return artistRepository.findByNameStartingWithIgnoreCase(name,pageRequest);
+        return artistRepository.findByNameIsContaining(name,pageRequest);
     }
 
-    @RequestMapping(value = "",method = RequestMethod.POST, consumes = "application/JSON")
+    @RequestMapping(value = "",method = RequestMethod.POST, consumes = "application/json")
     public Artist create(@RequestBody Artist artist) {
         return artistRepository.save(artist);
     }
 
-    @RequestMapping(value="/{id}",method = RequestMethod.PUT, consumes = "application/JSON")
+    @RequestMapping(value="/{id}",method = RequestMethod.PUT, consumes = "application/json")
     public Artist modify(@RequestBody Artist artist) {
         return artistRepository.save(artist);
     }
 
-    @RequestMapping(value="/{id}",method = RequestMethod.DELETE, consumes = "application/JSON")
+    @RequestMapping(value="/{id}",method = RequestMethod.DELETE, consumes = "application/json")
     public void delete(@PathVariable("id") Long id, @RequestBody Artist artist) {
         if(artist.getId()==id) {
             artistRepository.delete(id);

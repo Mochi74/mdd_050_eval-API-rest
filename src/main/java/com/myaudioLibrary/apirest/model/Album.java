@@ -33,7 +33,7 @@ public class Album {
         this.title = title;
     }
 
-    //public Artist getArtist(){return artist; }
+    public String getArtist(){return artist.getName(); }
 
     public void setArtist(Artist artist){this.artist=artist; }
 
