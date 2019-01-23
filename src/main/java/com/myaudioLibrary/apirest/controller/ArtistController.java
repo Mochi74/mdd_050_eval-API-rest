@@ -7,9 +7,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
@@ -30,19 +34,22 @@ public class ArtistController {
     }
     @RequestMapping(value="/{id}")
     public Artist getById(@PathVariable("id") Long id) {
-        Artist result = artistRepository.findOne(id);
-        if(result==null) {/*id not found return 404 error */
-   //         throw new ResponseStatusException(
-   //                 HttpStatus.NOT_FOUND, "Artist Not Found");
+        Artist a = artistRepository.findOne(id);
+        if(a==null) {/*id not found return 404 error */
+            throw new EntityNotFoundException("artist with id:"+id+"does not exist !");
         }
-        return result;
+        return a;
 
 
     }
 
     @RequestMapping(value="", params = "name")
     public Artist getByName(@RequestParam("name") String name) {
-        return artistRepository.findByNameIgnoreCase(name);
+        Artist a= artistRepository.findByNameIgnoreCase(name);
+        if (a == null) {/*name not found return 404 error */
+            throw new EntityNotFoundException("artist with name: " + name + " is not found !");
+        }
+        return a;
     }
 
 
@@ -52,7 +59,8 @@ public class ArtistController {
                                       @RequestParam("sortProperty") String paramSort,
                                       @RequestParam("sortDirection") Sort.Direction direction) {
         Pageable pageRequest = new PageRequest(page, size, direction, paramSort);
-        return artistRepository.findAll(pageRequest);
+        Page<Artist> p=artistRepository.findAll(pageRequest);
+        return p;
     }
 
     @RequestMapping(value = "",params = { "name","page", "size" ,"sortProperty","sortDirection"})
@@ -62,24 +70,40 @@ public class ArtistController {
                                      @RequestParam("sortProperty") String paramSort,
                                      @RequestParam("sortDirection") Sort.Direction direction) {
         Pageable pageRequest = new PageRequest(page, size, direction, paramSort);
-        return artistRepository.findByNameIsContaining(name,pageRequest);
+        Page<Artist> p = artistRepository.findByNameIsContaining(name, pageRequest);
+        if (p == null) {/*name not found return 404 error */
+            throw new EntityNotFoundException("artist with name:" + name + "does not exist !");
+        }
+        return p;
     }
 
     @RequestMapping(value = "",method = RequestMethod.POST, consumes = "application/json")
     public Artist create(@RequestBody Artist artist) {
+
+        if (artistRepository.findByNameIgnoreCase(artist.getName())!=null) {
+            /* check if artist already exist return 409 */
+            throw new EntityExistsException("artist with name:" + artist.getName() + " already exist !");
+        }
         return artistRepository.save(artist);
     }
 
     @RequestMapping(value="/{id}",method = RequestMethod.PUT, consumes = "application/json")
-    public Artist modify(@RequestBody Artist artist) {
+    public Artist modify(@PathVariable("id") Long id,@RequestBody Artist artist) {
+        if(!artistRepository.exists(id))  {
+            throw new EntityNotFoundException("artist with id:" + id + "does not exist !");
+        }
         return artistRepository.save(artist);
     }
 
     @RequestMapping(value="/{id}",method = RequestMethod.DELETE, consumes = "application/json")
     public void delete(@PathVariable("id") Long id, @RequestBody Artist artist) {
-        if(artist.getId()==id) {
-            artistRepository.delete(id);
+        if(!artistRepository.exists(id))  {
+            throw new EntityNotFoundException("artist with id:" + id + "does not exist !");
         }
+        if (!artist.getId().equals(id)) {
+            throw new IllegalArgumentException("artist id is not reliable !");
+        }
+        artistRepository.delete(id);
     }
 
 
