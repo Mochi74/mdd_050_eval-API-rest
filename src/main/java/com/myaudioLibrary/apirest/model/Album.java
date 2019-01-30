@@ -15,7 +15,6 @@ public class Album {
     @JoinColumn (name="artistId")
     private Artist artist;
 
-   // private Long artistId;
 
     public Long getId() {
         return id;
@@ -33,12 +32,10 @@ public class Album {
         this.title = title;
     }
 
-    public String getArtist(){return artist.getName(); }
-
+    public Artist getArtist(){return artist; }
     public void setArtist(Artist artist){this.artist=artist; }
 
     //public Long getArtistId(){return artistId; }
-
     //public void setArtistId(Long artistId){this.artistId=artistId; }
 
 }

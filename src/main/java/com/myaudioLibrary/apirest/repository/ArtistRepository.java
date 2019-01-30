@@ -12,7 +12,6 @@ import java.util.List;
 
 @Repository
 public interface ArtistRepository extends JpaRepository<Artist, Long> {
-
     Artist findByNameIgnoreCase(String name);
     Page<Artist> findByNameIsContaining(String name, Pageable pr);
 };

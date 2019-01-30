@@ -1,5 +1,7 @@
 package com.myaudioLibrary.apirest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class Artist {
     private String name;
 
     @OneToMany(mappedBy = "artist")
+    @JsonIgnoreProperties("artist")
     private List<Album> albums;
 
     public Long getId() {
@@ -30,7 +33,6 @@ public class Artist {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public List<Album> getAlbums() {
         return albums;
